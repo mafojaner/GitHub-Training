@@ -1214,6 +1214,92 @@
     </div>
   </div>
 
+  <!-- 07 · Update -->
+  <div class="section" id="update">
+    <div class="section-header">
+      <span class="section-number">09</span>
+      <div>
+        <div class="section-title">First-Time Upload (New Repository)</div>
+        <div class="section-desc">Upload a local project to a new GitHub repository using HTTPS.</div>
+        </div>
+      </div>
+    <div class="cmd-grid">
+    
+      <div class="cmd-card wide flow-diagram">
+        <div style="font-size:12px; color: var(--muted); margin-bottom:12px;">Feature Branch Workflow</div>
+          <div class="flow-steps">
+            <div class="flow-step">git init</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git add .</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git commit -m "Initial commit"</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git remote add origin https://github.com/your-username/your-repo-name.git</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git branch -M main</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git push -u origin main</div>
+          </div>
+        </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git init </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">1. Initialize local Git repository.</div>
+        <div class="cmd-note">Creates a .git folder in your project directory, enabling Git version tracking on your local machine. Run this inside your project folder.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git add . </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">2. Stage all changes</div>
+        <div class="cmd-note">Adds all new, modified, and deleted files in the current directory to the staging area. Prepares everything for commit.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git commit -m "Initial commit" </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">3. Create first commit</div>
+        <div class="cmd-note">Takes a snapshot of all staged files. The message "Initial commit" is standard for a project's first commit.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git remote add origin <span class="placeholder">&lt;https-url&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">4. Link to GitHub repository</div>
+        <div class="cmd-note">Connects your local repo to a remote GitHub repo via HTTPS. Replace <https-url> with your GitHub repo URL (e.g., https://github.com/username/repo.git).</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git branch -M main</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">5. Rename default branch to main</div>
+        <div class="cmd-note">Renames the default branch from master to main. Matches GitHub's current default branch naming convention.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git push -u origin main</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">6. Push to GitHub and set upstream</div>
+        <div class="cmd-note">Uploads your commit to GitHub and sets the upstream tracking. After this, future pushes can use just git push.</div>
+      </div>
+
+    </div>
+  </div>
+  
+
 </div><!-- /page -->
 
 <footer>
