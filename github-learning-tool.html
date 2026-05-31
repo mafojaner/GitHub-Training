@@ -386,7 +386,7 @@
       font-family: 'IBM Plex Mono', monospace;
     }
 
-    .flow-arrow { color: var(--border); font-size: 16px; }
+    .flow-arrow { color: black; font-size: 16px; }
 
     /* ── FOOTER ── */
     footer {
@@ -972,66 +972,132 @@
         <div class="section-title">Update a Repository</div>
         <div class="section-desc">If you already have a repository cloned locally and have made commits in the past, follow 
           these standard steps to add new commits and push them to GitHub.</div>
+        </div>
       </div>
-    </div>
     <div class="cmd-grid">
+    
+      <div class="cmd-card wide flow-diagram">
+        <div style="font-size:12px; color: var(--muted); margin-bottom:12px;">Feature Branch Workflow</div>
+          <div class="flow-steps">
+            <div class="flow-step">git status</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git add .</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git commit -m "Update navigation bar styling"</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git pull origin main</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">git push origin main</div>
+          </div>
+        </div>
 
       <div class="cmd-card">
         <div class="cmd-code-wrap">
-          <div class="cmd-code">git <span class="placeholder">&lt;branch&gt;</span></div>
+          <div class="cmd-code">git status </div>
           <button class="copy-btn" onclick="copyCode(this)">copy</button>
         </div>
-        <div class="cmd-label">Rebase onto a branch</div>
-        <div class="cmd-note">Replays your commits on top of another branch. Creates a cleaner, linear history than merging.</div>
-        <div class="cmd-tags"><span class="tag danger">rewrites history</span></div>
+        <div class="cmd-label">1. Check what has changed.</div>
+        <div class="cmd-note">Shows modified, staged, and untracked files. Always run this first to see what needs to be committed.</div>
       </div>
 
       <div class="cmd-card">
         <div class="cmd-code-wrap">
-          <div class="cmd-code">git rebase -i HEAD~<span class="placeholder">N</span></div>
+          <div class="cmd-code">git add . </div>
           <button class="copy-btn" onclick="copyCode(this)">copy</button>
         </div>
-        <div class="cmd-label">Interactive rebase (last N commits)</div>
-        <div class="cmd-note">Opens an editor to squash, reorder, reword, or drop the last N commits before sharing.</div>
-        <div class="cmd-tags"><span class="tag danger">rewrites history</span></div>
+        <div class="cmd-label">2. Stage all changes</div>
+        <div class="cmd-note">Adds all new, modified, and deleted files in the current directory to the staging area. Prepares everything for commit.</div>
+      </div>
+      
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git add <span class="placeholder">&lt;file&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Stage a specific file</div>
+        <div class="cmd-note">Stages only the specified file(s). Replace <span class="placeholder">&lt;file&gt;</span> with index.html or src/app.js. Repeat for multiple files.</div>
       </div>
 
       <div class="cmd-card">
         <div class="cmd-code-wrap">
-          <div class="cmd-code">git cherry-pick <span class="placeholder">&lt;hash&gt;</span></div>
+          <div class="cmd-code">3. git commit -m <span class="placeholder">&lt;message&gt;</span></div>
           <button class="copy-btn" onclick="copyCode(this)">copy</button>
         </div>
-        <div class="cmd-label">Cherry-pick a commit</div>
-        <div class="cmd-note">Applies a single commit from another branch to your current branch. Useful for hotfixes.</div>
+        <div class="cmd-label">Commit staged changes</div>
+        <div class="cmd-note">Creates a new commit with all staged changes. 
+        Use present tense, e.g., "Add search feature" or "Fix typo in footer".</div>
       </div>
 
       <div class="cmd-card">
         <div class="cmd-code-wrap">
-          <div class="cmd-code">git bisect start</div>
+          <div class="cmd-code">git commit -am <span class="placeholder">&lt;message&gt;</span></div>
           <button class="copy-btn" onclick="copyCode(this)">copy</button>
         </div>
-        <div class="cmd-label">Binary search for a bug</div>
-        <div class="cmd-note">Helps you find which commit introduced a bug using binary search. Mark commits as <code>good</code> or <code>bad</code>.</div>
-        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+        <div class="cmd-label">Stage tracked files and commit</div>
+        <div class="cmd-note">Automatically stages all already tracked files and commits them in one command. Does not include new/untracked files.</div>
       </div>
 
       <div class="cmd-card">
         <div class="cmd-code-wrap">
-          <div class="cmd-code">git tag <span class="placeholder">v1.0.0</span></div>
+          <div class="cmd-code">git pull origin <span class="placeholder">&lt;branch&gt;</span></div>
           <button class="copy-btn" onclick="copyCode(this)">copy</button>
         </div>
-        <div class="cmd-label">Create a tag</div>
-        <div class="cmd-note">Marks a commit with a label, typically for releases. Push tags with <code>git push --tags</code>.</div>
+        <div class="cmd-label">4. Pull latest changes from remote</div>
+        <div class="cmd-note">Downloads and merges the latest commits from GitHub into your current branch. Run before pushing to avoid conflicts.</div>
       </div>
 
       <div class="cmd-card">
         <div class="cmd-code-wrap">
-          <div class="cmd-code">git log --all --decorate --oneline --graph</div>
+          <div class="cmd-code">git pull --rebase origin <span class="placeholder">&lt;branch&gt;</span></div>
           <button class="copy-btn" onclick="copyCode(this)">copy</button>
         </div>
-        <div class="cmd-label">Visualise full branch graph</div>
-        <div class="cmd-note">Nicknamed <code>git adog</code>. Shows a full ASCII graph of all branches and commits.</div>
-        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+        <div class="cmd-label">Pull with rebase (cleaner history)</div>
+        <div class="cmd-note">Downloads remote changes and replays your local commits on top. Creates a linear history instead of merge commits.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git push origin <span class="placeholder">&lt;branch&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">5. Push commits to GitHub</div>
+        <div class="cmd-note">Uploads your local commits to the remote repository. Replace <branch> with main, master, or your feature branch name.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git push </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Push to upstream branch</div>
+        <div class="cmd-note">If upstream tracking is set (using -u on first push), this pushes to the correct remote branch automatically.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git log --oneline -5 </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">View recent commits</div>
+        <div class="cmd-note">Shows the last 5 commits with shortened hashes and messages. Useful to confirm your commit is ready to push.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git diff </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">See unstaged changes</div>
+        <div class="cmd-note">Shows line-by-line differences between your working directory and the last commit. Review before staging.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git diff --staged </div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">See staged changes</div>
+        <div class="cmd-note">Shows what will be included in your next commit. Review before running git commit.</div>
       </div>
 
     </div>
