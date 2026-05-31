@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Git & GitHub — Command Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #f0f0ee;
+      --surface:   #e8e8e5;
+      --surface2:  #ddddd9;
+      --border:    #c8c8c3;
+      --text:      #1a1a18;
+      --muted:     #6b6b66;
+      --accent:    #e05c2a;
+      --accent2:   #2a7ae0;
+      --green:     #2a8a4a;
+      --tag-bg:    #d8d8d4;
+      --code-bg:   #1e1e1c;
+      --code-text: #d4d4c8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── TOP NAV ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-bar {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 0 32px;
+      height: 52px;
+    }
+
+    .logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .logo-icon {
+      width: 22px; height: 22px;
+      background: var(--text);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .logo-icon svg { width: 14px; height: 14px; fill: var(--bg); }
+
+    /* Desktop nav */
+    nav {
+      display: flex;
+      gap: 4px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    nav a {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    nav a:hover { background: var(--surface2); color: var(--text); }
+
+    .header-right {
+      margin-left: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Hamburger button — hidden on desktop */
+    .nav-toggle {
+      display: none;
+      margin-left: auto;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      width: 36px; height: 36px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text);
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .nav-toggle svg { display: block; }
+
+    /* Mobile drawer */
+    .nav-drawer {
+      display: none;
+      flex-direction: column;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 8px 16px 12px;
+      gap: 2px;
+    }
+
+    .nav-drawer.open { display: flex; }
+
+    .nav-drawer a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 9px 12px;
+      border-radius: 5px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-drawer a:hover,
+    .nav-drawer a:active { background: var(--surface2); color: var(--text); }
+
+    /* ── RESPONSIVE BREAKPOINTS ── */
+    @media (max-width: 700px) {
+      .header-bar { padding: 0 16px; gap: 12px; }
+      nav { display: none; }            /* hide inline nav */
+      .header-right { display: none; } /* hide version tag */
+      .nav-toggle { display: flex; }   /* show hamburger */
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 64px 32px 48px;
+      max-width: 900px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 strong { font-weight: 600; }
+
+    .hero p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      margin-top: 56px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      min-width: 24px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── COMMAND GRID ── */
+    .cmd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    @media (max-width: 620px) {
+      .cmd-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── COMMAND CARD ── */
+    .cmd-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color 0.15s, background 0.15s;
+      cursor: default;
+    }
+
+    .cmd-card:hover {
+      border-color: #b0b0aa;
+      background: #e4e4e1;
+    }
+
+    .cmd-code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--code-text);
+      background: var(--code-bg);
+      padding: 6px 10px;
+      border-radius: 4px;
+      word-break: break-all;
+    }
+
+    .cmd-code .placeholder {
+      color: #f0a050;
+      font-style: italic;
+    }
+
+    .cmd-label {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .cmd-note {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .cmd-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--tag-bg);
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .tag.danger { background: #f5d8ce; color: #c03000; }
+    .tag.safe   { background: #cee8d4; color: var(--green); }
+    .tag.remote { background: #ccd8f0; color: #1a4a9a; }
+
+    /* ── WHEN TO USE BOXES ── */
+    .when-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      border-radius: 0 6px 6px 0;
+      padding: 14px 16px;
+      margin-top: 16px;
+    }
+
+    .when-box h4 {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 8px;
+    }
+
+    .when-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .when-list li {
+      font-size: 13px;
+      color: var(--muted);
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .when-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--border);
+      font-size: 11px;
+      top: 1px;
+    }
+
+    .when-list li strong { color: var(--text); font-weight: 500; }
+
+    /* ── WIDE CARD (spans full width) ── */
+    .cmd-card.wide {
+      grid-column: 1 / -1;
+    }
+
+    /* ── FLOW DIAGRAM placeholder ── */
+    .flow-diagram {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      grid-column: 1 / -1;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .flow-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .flow-step {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .flow-arrow { color: var(--border); font-size: 16px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 32px;
+      text-align: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── COPY BUTTON ── */
+    .cmd-code-wrap {
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--surface2);
+      border: none;
+      border-radius: 3px;
+      padding: 2px 7px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .cmd-card:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { background: var(--border); color: var(--text); }
+    .copy-btn.copied { color: var(--green); }
+
+    /* ── SEARCH BAR ── */
+    .search-wrap {
+      margin: 32px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      max-width: 360px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 8px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: #a0a09a; }
+
+    .search-hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-bar">
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </div>
+      git ref
+    </a>
+    <nav>
+      <a href="#setup">Setup</a>
+      <a href="#basics">Basics</a>
+      <a href="#branching">Branching</a>
+      <a href="#remote">Remote</a>
+      <a href="#undoing">Undoing</a>
+      <a href="#advanced">Advanced</a>
+      <a href="#workflow">Workflow</a>
+    </nav>
+    <div class="header-right">v1.0 · reference</div>
+    <!-- Hamburger (mobile only) -->
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg id="iconMenu" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="4" width="14" height="1.5" rx="0.75" fill="currentColor"/>
+        <rect x="2" y="8.25" width="14" height="1.5" rx="0.75" fill="currentColor"/>
+        <rect x="2" y="12.5" width="14" height="1.5" rx="0.75" fill="currentColor"/>
+      </svg>
+      <svg id="iconClose" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <line x1="3.5" y1="3.5" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="14.5" y1="3.5" x2="3.5" y2="14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <!-- Mobile nav drawer -->
+  <div class="nav-drawer" id="navDrawer">
+    <a href="#setup"     onclick="closeNav()">Setup</a>
+    <a href="#basics"    onclick="closeNav()">Basics</a>
+    <a href="#branching" onclick="closeNav()">Branching</a>
+    <a href="#remote"    onclick="closeNav()">Remote</a>
+    <a href="#undoing"   onclick="closeNav()">Undoing</a>
+    <a href="#advanced"  onclick="closeNav()">Advanced</a>
+    <a href="#workflow"  onclick="closeNav()">Workflow</a>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-eyebrow">Git &amp; GitHub Command Reference</div>
+  <h1><strong>Learn Git commands</strong><br>and when to apply them</h1>
+  <p>A practical reference covering the commands you'll reach for most, with context on why and when each one matters — not just what it does.</p>
+
+  <div class="search-wrap">
+    <input class="search-input" type="text" placeholder="Search commands..." id="searchInput" />
+    <span class="search-hint" id="searchHint"></span>
+  </div>
+</div>
+
+<!-- ── PAGE CONTENT ── -->
+<div class="page">
+
+  <!-- 01 · SETUP -->
+  <div class="section" id="setup">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <div>
+        <div class="section-title">Setup &amp; Configuration</div>
+        <div class="section-desc">First things you run on a new machine or repository</div>
+      </div>
+    </div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git config --global user.name <span class="placeholder">"Your Name"</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Set global username</div>
+        <div class="cmd-note">Identifies your commits across all repos on this machine.</div>
+        <div class="cmd-tags"><span class="tag safe">once</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git config --global user.email <span class="placeholder">"you@example.com"</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Set global email</div>
+        <div class="cmd-note">Must match your GitHub email for commits to link to your profile.</div>
+        <div class="cmd-tags"><span class="tag safe">once</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git init</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Initialise a repository</div>
+        <div class="cmd-note">Creates a hidden <code>.git</code> folder. Run once inside a new project folder.</div>
+        <div class="cmd-tags"><span class="tag safe">once per project</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git clone <span class="placeholder">&lt;url&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Clone a remote repository</div>
+        <div class="cmd-note">Downloads the full repo and sets up <code>origin</code> automatically.</div>
+        <div class="cmd-tags"><span class="tag remote">remote</span></div>
+      </div>
+
+    </div>
+    <div class="when-box">
+      <h4>When to use this section</h4>
+      <ul class="when-list">
+        <li><strong>New machine:</strong> run the config commands before anything else</li>
+        <li><strong>Starting a project from scratch:</strong> <code>git init</code> inside your project folder</li>
+        <li><strong>Joining an existing project:</strong> <code>git clone</code> instead of <code>init</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 02 · BASICS -->
+  <div class="section" id="basics">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <div>
+        <div class="section-title">The Basics — Stage &amp; Commit</div>
+        <div class="section-desc">The core daily loop: track changes and save snapshots</div>
+      </div>
+    </div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git status</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Check working tree status</div>
+        <div class="cmd-note">Shows modified, staged, and untracked files. Run this constantly — it's free.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git add <span class="placeholder">&lt;file&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Stage a specific file</div>
+        <div class="cmd-note">Moves changes to the staging area. Only staged changes are included in the next commit.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git add .</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Stage all changes</div>
+        <div class="cmd-note">Stages every modified and new file. Convenient but review with <code>git status</code> first.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git commit -m <span class="placeholder">"message"</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Commit staged changes</div>
+        <div class="cmd-note">Creates a permanent snapshot. Write the message in present-tense imperative: <em>"Fix login bug"</em>.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git log --oneline</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">View commit history (compact)</div>
+        <div class="cmd-note">Shows abbreviated hash + message. Add <code>--graph</code> to see branch visualisation.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git diff</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Show unstaged changes</div>
+        <div class="cmd-note">Line-by-line diff of what changed but isn't staged yet. Use <code>git diff --staged</code> to see staged changes.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+      </div>
+
+    </div>
+    <div class="when-box">
+      <h4>When to use this section</h4>
+      <ul class="when-list">
+        <li><strong>Before starting work:</strong> <code>git status</code> to understand current state</li>
+        <li><strong>Finished a logical unit of work:</strong> <code>add</code> + <code>commit</code> to save a snapshot</li>
+        <li><strong>Reviewing your work:</strong> <code>git diff</code> before staging, <code>git log</code> to review history</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 03 · BRANCHING -->
+  <div class="section" id="branching">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <div>
+        <div class="section-title">Branching &amp; Merging</div>
+        <div class="section-desc">Isolate work, switch context, and bring changes together</div>
+      </div>
+    </div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git branch</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">List branches</div>
+        <div class="cmd-note">Shows all local branches. Current branch is marked with <code>*</code>.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git branch <span class="placeholder">&lt;name&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Create a branch</div>
+        <div class="cmd-note">Creates the branch but doesn't switch to it. Use <code>checkout -b</code> to do both at once.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git checkout -b <span class="placeholder">&lt;name&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Create &amp; switch to branch</div>
+        <div class="cmd-note">The most common way to start new work. Equivalent to <code>git switch -c</code> in modern Git.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git checkout <span class="placeholder">&lt;branch&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Switch branch</div>
+        <div class="cmd-note">Updates working directory to match that branch. Commit or stash first if you have changes.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git merge <span class="placeholder">&lt;branch&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Merge a branch</div>
+        <div class="cmd-note">Brings changes from <code>&lt;branch&gt;</code> into your current branch. May create a merge commit.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git branch -d <span class="placeholder">&lt;name&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Delete a branch</div>
+        <div class="cmd-note">Safe delete — Git warns you if the branch hasn't been merged. Use <code>-D</code> to force.</div>
+        <div class="cmd-tags"><span class="tag danger">destructive</span></div>
+      </div>
+
+    </div>
+    <div class="when-box">
+      <h4>When to use this section</h4>
+      <ul class="when-list">
+        <li><strong>Starting any new feature or fix:</strong> always branch off <code>main</code> first</li>
+        <li><strong>Context-switching:</strong> stash or commit, then <code>checkout</code> to another branch</li>
+        <li><strong>After a PR is merged:</strong> delete the feature branch locally to keep things clean</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 04 · REMOTE -->
+  <div class="section" id="remote">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <div>
+        <div class="section-title">Working with Remotes</div>
+        <div class="section-desc">Push, pull, and stay in sync with GitHub</div>
+      </div>
+    </div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git remote -v</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">List remotes</div>
+        <div class="cmd-note">Shows the fetch and push URLs. <code>origin</code> is the default name for the GitHub remote.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span><span class="tag remote">remote</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git push origin <span class="placeholder">&lt;branch&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Push a branch to GitHub</div>
+        <div class="cmd-note">Uploads your local commits. First push of a new branch often needs <code>-u origin &lt;branch&gt;</code> to set upstream.</div>
+        <div class="cmd-tags"><span class="tag remote">remote</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git pull</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Pull latest changes</div>
+        <div class="cmd-note">Fetches and merges remote changes into your current branch. Equivalent to <code>fetch</code> + <code>merge</code>.</div>
+        <div class="cmd-tags"><span class="tag remote">remote</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git fetch</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Fetch without merging</div>
+        <div class="cmd-note">Downloads remote changes but doesn't apply them. Safer than pull — lets you inspect first.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span><span class="tag remote">remote</span></div>
+      </div>
+
+      <div class="cmd-card wide">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git push -u origin <span class="placeholder">&lt;branch&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Push &amp; set upstream (first push of a new branch)</div>
+        <div class="cmd-note">The <code>-u</code> flag links your local branch to the remote one. After this, plain <code>git push</code> and <code>git pull</code> will work without specifying the branch name.</div>
+        <div class="cmd-tags"><span class="tag remote">remote</span></div>
+      </div>
+
+    </div>
+    <div class="when-box">
+      <h4>When to use this section</h4>
+      <ul class="when-list">
+        <li><strong>Start of a work session:</strong> <code>git pull</code> to get the latest from teammates</li>
+        <li><strong>Finished a feature:</strong> <code>git push</code> then open a Pull Request on GitHub</li>
+        <li><strong>Before merging:</strong> <code>git fetch</code> and review what changed upstream</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 05 · UNDOING -->
+  <div class="section" id="undoing">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <div>
+        <div class="section-title">Undoing Changes</div>
+        <div class="section-desc">Fix mistakes — ranging from safe to permanent</div>
+      </div>
+    </div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git restore <span class="placeholder">&lt;file&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Discard working directory changes</div>
+        <div class="cmd-note">Reverts a file to its last committed state. <strong>Unstaged changes are lost permanently.</strong></div>
+        <div class="cmd-tags"><span class="tag danger">destructive</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git restore --staged <span class="placeholder">&lt;file&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Unstage a file</div>
+        <div class="cmd-note">Removes a file from the staging area without touching the actual file content.</div>
+        <div class="cmd-tags"><span class="tag safe">safe</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git commit --amend</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Amend the last commit</div>
+        <div class="cmd-note">Rewrite the most recent commit message or add forgotten files. <strong>Only use before pushing.</strong></div>
+        <div class="cmd-tags"><span class="tag danger">rewrites history</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git revert <span class="placeholder">&lt;hash&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Revert a commit (safe)</div>
+        <div class="cmd-note">Creates a new commit that undoes a specific commit. Safe to use on shared branches.</div>
+        <div class="cmd-tags"><span class="tag safe">safe on shared</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git reset --soft HEAD~1</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Undo last commit, keep changes staged</div>
+        <div class="cmd-note">Moves HEAD back one commit. Your files and staged changes are preserved.</div>
+        <div class="cmd-tags"><span class="tag danger">rewrites history</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git stash</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Stash uncommitted changes</div>
+        <div class="cmd-note">Temporarily shelves changes so you can switch context. Restore with <code>git stash pop</code>.</div>
+        <div class="cmd-tags"><span class="tag safe">reversible</span></div>
+      </div>
+
+    </div>
+    <div class="when-box">
+      <h4>When to use this section</h4>
+      <ul class="when-list">
+        <li><strong>Typo in last commit message:</strong> <code>--amend</code> (before pushing only)</li>
+        <li><strong>Need to undo a pushed commit:</strong> always use <code>git revert</code></li>
+        <li><strong>Need to switch branches mid-work:</strong> <code>git stash</code>, switch, then <code>stash pop</code></li>
+        <li><strong>Staged the wrong file:</strong> <code>git restore --staged</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 06 · ADVANCED -->
+  <div class="section" id="advanced">
+    <div class="section-header">
+      <span class="section-number">06</span>
+      <div>
+        <div class="section-title">Advanced Commands</div>
+        <div class="section-desc">Rebase, cherry-pick, and powerful history tools</div>
+      </div>
+    </div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git rebase <span class="placeholder">&lt;branch&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Rebase onto a branch</div>
+        <div class="cmd-note">Replays your commits on top of another branch. Creates a cleaner, linear history than merging.</div>
+        <div class="cmd-tags"><span class="tag danger">rewrites history</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git rebase -i HEAD~<span class="placeholder">N</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Interactive rebase (last N commits)</div>
+        <div class="cmd-note">Opens an editor to squash, reorder, reword, or drop the last N commits before sharing.</div>
+        <div class="cmd-tags"><span class="tag danger">rewrites history</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git cherry-pick <span class="placeholder">&lt;hash&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Cherry-pick a commit</div>
+        <div class="cmd-note">Applies a single commit from another branch to your current branch. Useful for hotfixes.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git bisect start</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Binary search for a bug</div>
+        <div class="cmd-note">Helps you find which commit introduced a bug using binary search. Mark commits as <code>good</code> or <code>bad</code>.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git tag <span class="placeholder">v1.0.0</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Create a tag</div>
+        <div class="cmd-note">Marks a commit with a label, typically for releases. Push tags with <code>git push --tags</code>.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git log --all --decorate --oneline --graph</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Visualise full branch graph</div>
+        <div class="cmd-note">Nicknamed <code>git adog</code>. Shows a full ASCII graph of all branches and commits.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 07 · Update -->
+  <div class="section" id="advanced">
+    <div class="section-header">
+      <span class="section-number">07</span>
+      <div>
+        <div class="section-title">Update a Repository</div>
+        <div class="section-desc">If you already have a repository cloned locally and have made commits in the past, follow 
+          these standard steps to add new commits and push them to GitHub.</div>
+      </div>
+    </div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git <span class="placeholder">&lt;branch&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Rebase onto a branch</div>
+        <div class="cmd-note">Replays your commits on top of another branch. Creates a cleaner, linear history than merging.</div>
+        <div class="cmd-tags"><span class="tag danger">rewrites history</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git rebase -i HEAD~<span class="placeholder">N</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Interactive rebase (last N commits)</div>
+        <div class="cmd-note">Opens an editor to squash, reorder, reword, or drop the last N commits before sharing.</div>
+        <div class="cmd-tags"><span class="tag danger">rewrites history</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git cherry-pick <span class="placeholder">&lt;hash&gt;</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Cherry-pick a commit</div>
+        <div class="cmd-note">Applies a single commit from another branch to your current branch. Useful for hotfixes.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git bisect start</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Binary search for a bug</div>
+        <div class="cmd-note">Helps you find which commit introduced a bug using binary search. Mark commits as <code>good</code> or <code>bad</code>.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git tag <span class="placeholder">v1.0.0</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Create a tag</div>
+        <div class="cmd-note">Marks a commit with a label, typically for releases. Push tags with <code>git push --tags</code>.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git log --all --decorate --oneline --graph</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">Visualise full branch graph</div>
+        <div class="cmd-note">Nicknamed <code>git adog</code>. Shows a full ASCII graph of all branches and commits.</div>
+        <div class="cmd-tags"><span class="tag safe">read-only</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 08 · WORKFLOW -->
+  <div class="section" id="workflow">
+    <div class="section-header">
+      <span class="section-number">08</span>
+      <div>
+        <div class="section-title">Typical GitHub Workflow</div>
+        <div class="section-desc">The everyday feature branch → Pull Request loop</div>
+      </div>
+    </div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card wide flow-diagram">
+        <div style="font-size:12px; color: var(--muted); margin-bottom:12px;">Feature Branch Workflow</div>
+        <div class="flow-steps">
+          <div class="flow-step">git pull</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">checkout -b feature</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">add + commit</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">push -u origin</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">Open PR on GitHub</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">merge &amp; delete branch</div>
+        </div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git pull origin main</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">1. Sync with main</div>
+        <div class="cmd-note">Always start from an up-to-date main branch to avoid large merge conflicts later.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git checkout -b <span class="placeholder">feature/my-feature</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">2. Create a feature branch</div>
+        <div class="cmd-note">Keep branches small and focused. A good branch name describes the change: <em>fix/login-redirect</em>.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git add . &amp;&amp; git commit -m <span class="placeholder">"feat: add X"</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">3. Commit your work</div>
+        <div class="cmd-note">Commit often and in small logical chunks. Use conventional commits: <code>feat:</code>, <code>fix:</code>, <code>docs:</code>.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git push -u origin <span class="placeholder">feature/my-feature</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">4. Push your branch</div>
+        <div class="cmd-note">GitHub will show a prompt to open a Pull Request as soon as you push.</div>
+        <div class="cmd-tags"><span class="tag remote">remote</span></div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git checkout main &amp;&amp; git pull</div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">5. After PR is merged</div>
+        <div class="cmd-note">Switch back to main and pull the merged changes so your local is up to date.</div>
+      </div>
+
+      <div class="cmd-card">
+        <div class="cmd-code-wrap">
+          <div class="cmd-code">git branch -d <span class="placeholder">feature/my-feature</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <div class="cmd-label">6. Clean up the branch</div>
+        <div class="cmd-note">Delete the local branch to keep your workspace clean. The remote branch can be deleted on GitHub.</div>
+        <div class="cmd-tags"><span class="tag danger">destructive</span></div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer>
+  git ref · personal reference guide · add your own notes as you learn
+</footer>
+
+<script>
+  // ── COPY TO CLIPBOARD ──
+  function copyCode(btn) {
+    const codeEl = btn.previousElementSibling;
+    const text = codeEl.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  // ── HAMBURGER MENU ──
+  const navToggle  = document.getElementById('navToggle');
+  const navDrawer  = document.getElementById('navDrawer');
+  const iconMenu   = document.getElementById('iconMenu');
+  const iconClose  = document.getElementById('iconClose');
+
+  navToggle.addEventListener('click', () => {
+    const open = navDrawer.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+    iconMenu.style.display  = open ? 'none'  : 'block';
+    iconClose.style.display = open ? 'block' : 'none';
+  });
+
+  function closeNav() {
+    navDrawer.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    iconMenu.style.display  = 'block';
+    iconClose.style.display = 'none';
+  }
+
+  // Close drawer when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!navDrawer.contains(e.target) && !navToggle.contains(e.target)) {
+      closeNav();
+    }
+  });
+
+  // ── SEARCH ──
+  const searchInput = document.getElementById('searchInput');
+  const searchHint  = document.getElementById('searchHint');
+  const allCards    = document.querySelectorAll('.cmd-card');
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) {
+      allCards.forEach(c => c.style.display = '');
+      searchHint.textContent = '';
+      return;
+    }
+    let visible = 0;
+    allCards.forEach(card => {
+      const text = card.innerText.toLowerCase();
+      if (text.includes(q)) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    searchHint.textContent = `${visible} result${visible !== 1 ? 's' : ''}`;
+  });
+</script>
+
+</body>
+</html>
